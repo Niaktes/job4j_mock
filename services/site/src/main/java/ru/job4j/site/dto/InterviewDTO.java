@@ -28,4 +28,6 @@ public class InterviewDTO {
     private String createDate;
 
     private int topicId;
+
+    private String submitterName;
 }

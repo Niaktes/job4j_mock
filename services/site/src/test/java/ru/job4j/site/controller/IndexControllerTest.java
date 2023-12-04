@@ -79,10 +79,10 @@ class IndexControllerTest {
         var listCat = List.of(cat1, cat2);
         var firstInterview = new InterviewDTO(1, 1, 1, 1,
                 "interview1", "description1", "contact1",
-                "30.02.2024", "09.10.2023", 1);
+                "30.02.2024", "09.10.2023", 1, "root");
         var secondInterview = new InterviewDTO(2, 1, 1, 2,
                 "interview2", "description2", "contact2",
-                "30.02.2024", "09.10.2023", 1);
+                "30.02.2024", "09.10.2023", 1, "root");
         var listInterviews = List.of(firstInterview, secondInterview);
         when(topicsService.getByCategory(cat1.getId())).thenReturn(List.of(topicDTO1));
         when(topicsService.getByCategory(cat2.getId())).thenReturn(List.of(topicDTO2));
