@@ -12,6 +12,7 @@ import ru.job4j.site.dto.ProfileDTO;
 import ru.job4j.site.util.RestPageImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,14 +37,10 @@ public class InterviewsService {
                 .get();
         var mapper = new ObjectMapper();
         List<InterviewDTO> interviews =  mapper.readValue(text, new TypeReference<>() { });
-        List<ProfileDTO> profiles = profilesService.getAllProfile();
-        interviews.forEach(
-                interview -> profiles.stream()
-                        .filter(p -> p.getId().equals(interview.getSubmitterId()))
-                        .findFirst()
-                        .ifPresent(
-                                p -> interview.setSubmitterName(p.getUsername())
-                        ));
+        interviews.forEach(interview -> {
+            Optional<ProfileDTO> profile = profilesService.getProfileById(interview.getSubmitterId());
+            profile.ifPresent(p -> interview.setSubmitterName(p.getUsername()));
+        });
         return interviews;
     }
 
