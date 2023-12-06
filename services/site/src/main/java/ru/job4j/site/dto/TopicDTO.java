@@ -14,4 +14,5 @@ public class TopicDTO {
     private int total;
     private CategoryDTO category;
     private int position;
+    private int newInterviews;
 }

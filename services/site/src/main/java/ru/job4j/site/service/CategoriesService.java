@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.site.dto.CategoryDTO;
+import ru.job4j.site.dto.TopicDTO;
 
 import java.util.List;
 
@@ -62,7 +63,13 @@ public class CategoriesService {
     public List<CategoryDTO> getMostPopular() throws JsonProcessingException {
         var categoriesDTO = getPopularFromDesc();
         for (var categoryDTO : categoriesDTO) {
-            categoryDTO.setTopicsSize(topicsService.getByCategory(categoryDTO.getId()).size());
+            List<TopicDTO> topicsDTO = topicsService.getByCategory(categoryDTO.getId());
+            categoryDTO.setTopicsSize(topicsDTO.size());
+            categoryDTO.setNewInterviews(
+                    topicsDTO.stream()
+                    .mapToInt(TopicDTO :: getNewInterviews)
+                    .sum()
+            );
         }
         return categoriesDTO;
     }

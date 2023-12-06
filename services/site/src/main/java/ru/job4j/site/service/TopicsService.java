@@ -3,7 +3,9 @@ package ru.job4j.site.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.site.domain.StatusInterview;
 import ru.job4j.site.dto.CategoryDTO;
 import ru.job4j.site.dto.TopicDTO;
 import ru.job4j.site.dto.TopicLiteDTO;
@@ -13,13 +15,24 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class TopicsService {
+
+    private final InterviewsService interviewsService;
 
     public List<TopicDTO> getByCategory(int id) throws JsonProcessingException {
         var text = new RestAuthCall("http://localhost:9902/topics/" + id).get();
         var mapper = new ObjectMapper();
-        return mapper.readValue(text, new TypeReference<>() {
-        });
+        List<TopicDTO> topicsDTO = mapper.readValue(text, new TypeReference<>() { });
+        for (var topicDTO : topicsDTO) {
+            topicDTO.setNewInterviews(
+                    (int) interviewsService.getByTopicId(topicDTO.getId(), 0, 20)
+                            .getContent().stream()
+                            .filter(i -> i.getStatus() == StatusInterview.IS_NEW.getId())
+                            .count()
+            );
+        }
+        return topicsDTO;
     }
 
     public TopicDTO getById(int id) throws JsonProcessingException {
