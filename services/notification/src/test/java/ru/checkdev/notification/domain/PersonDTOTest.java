@@ -22,33 +22,33 @@ class PersonDTOTest {
                 .setDate(2023, 10, 23)
                 .setTimeOfDay(20, 20, 20)
                 .build();
-        person = new PersonDTO("email", "password", true, roles, created);
+        person = new PersonDTO(0, "email", "password", true, roles, created);
     }
 
     @Test
-    public void testGetEmail() {
+    void testGetEmail() {
         assertThat("email", is(person.getEmail()));
     }
 
     @Test
-    public void testGetPassword() {
+    void testGetPassword() {
         assertThat("password", is(person.getPassword()));
     }
 
     @Test
-    public void testGetPrivacy() {
+    void testGetPrivacy() {
         assertThat(true, is(person.isPrivacy()));
     }
 
     @Test
-    public void testGetRoles() {
+    void testGetRoles() {
         List<RoleDTO> roles = new ArrayList<>();
         roles.add(new RoleDTO(1));
         assertThat(roles, is(person.getRoles()));
     }
 
     @Test
-    public void testGetCreated() {
+    void testGetCreated() {
         Calendar created = new Calendar.Builder()
                 .setDate(2023, 10, 23)
                 .setTimeOfDay(20, 20, 20)

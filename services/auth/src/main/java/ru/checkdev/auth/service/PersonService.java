@@ -201,6 +201,11 @@ public class PersonService {
         return this.persons.showed();
     }
 
+    public boolean checkProfilePassword(String email, String password) {
+        Profile profile = persons.findPerson(email);
+        return encoding.matches(password, profile.getPassword());
+    }
+
     public Photo compress(MultipartFile multipartFile) {
         Photo photo = new Photo();
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class PersonDTO {
+    private int id;
     private String email;
     private String password;
     private boolean privacy;

@@ -47,12 +47,12 @@ public class TgConfig {
     }
 
     /**
-     * Метод преобразовывает Object в карту Map<String,String>
+     * Метод преобразовывает Object в карту Map<String,Object>
      *
      * @param object Object or Person(Auth)
      * @return Map
      */
-    public Map<String, String> getObjectToMap(Object object) {
+    public Map<String, Object> getObjectToMap(Object object) {
         return MAPPER.convertValue(object, Map.class);
     }
 }

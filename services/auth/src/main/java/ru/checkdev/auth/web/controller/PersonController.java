@@ -147,4 +147,21 @@ public class PersonController {
         map.put("getTotal", persons.showed());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    @GetMapping("/checkUser")
+    public Object checkUser(@RequestParam String email, @RequestParam String password) {
+        if (persons.checkProfilePassword(email, password)) {
+            return new Object() {
+                public String getOk() {
+                    return "ok";
+                }
+            };
+        } else {
+            return new Object() {
+                public String getError() {
+                    return "Пароль введен не верно.";
+                }
+            };
+        }
+    }
 }

@@ -16,10 +16,10 @@ import ru.checkdev.notification.domain.PersonDTO;
  */
 @Service
 @Slf4j
-public class TgAuthCallWebClint {
+public class TgAuthCallWebClient {
     private WebClient webClient;
 
-    public TgAuthCallWebClint(@Value("${server.auth}") String urlAuth) {
+    public TgAuthCallWebClient(@Value("${server.auth}") String urlAuth) {
         this.webClient = WebClient.create(urlAuth);
     }
 
@@ -27,14 +27,14 @@ public class TgAuthCallWebClint {
      * Метод get
      *
      * @param url URL http
-     * @return Mono<Person>
+     * @return Mono<Object>
      */
-    public Mono<PersonDTO> doGet(String url) {
+    public Mono<Object> doGet(String url) {
         return webClient
                 .get()
                 .uri(url)
                 .retrieve()
-                .bodyToMono(PersonDTO.class)
+                .bodyToMono(Object.class)
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
@@ -43,7 +43,7 @@ public class TgAuthCallWebClint {
      *
      * @param url       URL http
      * @param personDTO Body PersonDTO.class
-     * @return Mono<Person>
+     * @return Mono<Object>
      */
     public Mono<Object> doPost(String url, PersonDTO personDTO) {
         return webClient
