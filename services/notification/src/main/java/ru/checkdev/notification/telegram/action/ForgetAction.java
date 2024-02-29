@@ -18,7 +18,7 @@ import ru.checkdev.notification.telegram.service.TgUserService;
 public class ForgetAction implements Action {
 
     private static final String ERROR_OBJECT = "error";
-    private static final String URL_AUTH_REGISTRATION = "/registration";
+    private static final String URL_FORGOT_PASSWORD = "/forgot";
     private final TgConfig tgConfig = new TgConfig("tg/", 8);
     private final TgUserService tgUserService;
     private final TgAuthCallWebClient authCallWebClient;
@@ -43,14 +43,14 @@ public class ForgetAction implements Action {
             return new SendMessage(String.valueOf(chatId), text);
         }
 
-        int userId = existedUser.get().getUserId();
+        String username = existedUser.get().getUsername();
         String email = existedUser.get().getEmail();
         String newPassword = tgConfig.getPassword();
-        PersonDTO person = new PersonDTO(userId, email, newPassword, true, null,
+        PersonDTO person = new PersonDTO(username, email, newPassword, true, null,
                 Calendar.getInstance());
         Object result;
         try {
-            result = authCallWebClient.doPost(URL_AUTH_REGISTRATION, person).block();
+            result = authCallWebClient.doPost(URL_FORGOT_PASSWORD, person).block();
         } catch (Exception e) {
             log.error("WebClient doPost error: {}", e.getMessage());
             text = "Сервис не доступен попробуйте позже" + sl
@@ -64,9 +64,9 @@ public class ForgetAction implements Action {
             return new SendMessage(String.valueOf(chatId), text);
         }
 
-        text = "Ваши данные для входа: " + sl
+        text = "Ваши новые данные для входа: " + sl
                 + "Логин: " + email + sl
-                + "Новый пароль: " + newPassword + sl
+                + "Пароль: " + newPassword + sl
                 + urlSiteAuth;
         return new SendMessage(String.valueOf(chatId), text);
     }

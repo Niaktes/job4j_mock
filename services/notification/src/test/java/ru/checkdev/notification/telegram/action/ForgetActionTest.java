@@ -70,7 +70,7 @@ class ForgetActionTest {
     @Test
     void whenAuthServerNotAvailableThenExceptionLogAndServiceNotAvailableMessage() {
         listAppender.start();
-        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), false, 1);
+        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), 1);
         when(tgUserServiceMock.findByChatId(message.getChatId())).thenReturn(Optional.of(user));
         when(tgAuthCallWebClientMock.doPost(any(String.class), any(PersonDTO.class)))
                 .thenThrow(WebClientResponseException.class);
@@ -89,7 +89,7 @@ class ForgetActionTest {
 
     @Test
     void whenServerResponseHaveErrorObjectThenGetErrorMessage() {
-        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), false, 1);
+        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), 1);
         when(tgUserServiceMock.findByChatId(message.getChatId())).thenReturn(Optional.of(user));
         when(tgAuthCallWebClientMock.doPost(any(String.class), any(PersonDTO.class)))
                 .thenReturn(Mono.just(new Object() {
@@ -108,7 +108,7 @@ class ForgetActionTest {
 
     @Test
     void whenServerResponseHaveNoErrorThenGetMessageWithLoginPasswordSiteUrl() {
-        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), false, 1);
+        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), 1);
         when(tgUserServiceMock.findByChatId(message.getChatId())).thenReturn(Optional.of(user));
         when(tgAuthCallWebClientMock.doPost(any(String.class), any(PersonDTO.class)))
                 .thenReturn(Mono.just(new Object() {
@@ -121,9 +121,9 @@ class ForgetActionTest {
 
         assertThat(actualAnswer.getChatId()).isEqualTo(String.valueOf(message.getChatId()));
         assertThat(actualAnswer.getText())
-                .contains("Ваши данные для входа: ")
+                .contains("Ваши новые данные для входа: ")
                 .contains("Логин: " + user.getEmail())
-                .contains("Новый пароль: tg/")
+                .contains("Пароль: tg/")
                 .contains(siteUrlMock);
     }
 

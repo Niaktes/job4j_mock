@@ -24,8 +24,8 @@ public class TgUserService {
         return tgUsers.findByChatId(chatId);
     }
 
-    public void updateSubscribedByChatId(long chatId, boolean subscribed) {
-        tgUsers.updateSubscribedByChatId(chatId, subscribed);
+    public boolean deleteByChatId(long chatId) {
+        return tgUsers.deleteByChatId(chatId) > 0;
     }
 
 }

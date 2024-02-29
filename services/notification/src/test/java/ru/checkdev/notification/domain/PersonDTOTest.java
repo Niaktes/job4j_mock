@@ -22,7 +22,12 @@ class PersonDTOTest {
                 .setDate(2023, 10, 23)
                 .setTimeOfDay(20, 20, 20)
                 .build();
-        person = new PersonDTO(0, "email", "password", true, roles, created);
+        person = new PersonDTO("username", "email", "password", true, roles, created);
+    }
+
+    @Test
+    void testGetUsername() {
+        assertThat("username", is(person.getUsername()));
     }
 
     @Test

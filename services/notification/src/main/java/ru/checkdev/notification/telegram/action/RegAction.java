@@ -30,6 +30,12 @@ public class RegAction implements Action {
     private final TgAuthCallWebClient authCallWebClient;
     private final String urlSiteAuth;
 
+    /**
+     * Метод проверяет зарегистрирован ли пользователь
+     * и подготавливает ответное сообщение.
+     * @param message сообщение пользователя.
+     * @return BotApiMethod<Message> Ответное сообщение бота.
+     */
     @Override
     public BotApiMethod<Message> handle(Message message) {
         long chatId = message.getChatId();
@@ -60,6 +66,7 @@ public class RegAction implements Action {
     public BotApiMethod<Message> callback(Message message) {
         var chatId = message.getChatId().toString();
         var email = message.getText();
+        var username = message.getFrom().getUserName();
         var text = "";
         var sl = System.lineSeparator();
 
@@ -71,28 +78,29 @@ public class RegAction implements Action {
         }
 
         var password = tgConfig.getPassword();
-        var person = new PersonDTO(0, email, password, true, null,
+        var person = new PersonDTO(username, email, password, true, null,
                 Calendar.getInstance());
         Object result;
         try {
             result = authCallWebClient.doPost(URL_AUTH_REGISTRATION, person).block();
         } catch (Exception e) {
             log.error("WebClient doPost error: {}", e.getMessage());
-            text = "Сервис не доступен попробуйте позже" + sl
+            text = "Сервис авторизации не доступен попробуйте позже" + sl
                    + "/start";
             return new SendMessage(chatId, text);
         }
 
         var mapObject = tgConfig.getObjectToMap(result);
         if (mapObject.containsKey(ERROR_OBJECT)) {
-            text = "Ошибка регистрации: " + mapObject.get(ERROR_OBJECT);
+            text = mapObject.get(ERROR_OBJECT) + sl
+                    + "Если Вы владелец существующего аккаунта с указанной почтой, "
+                    + "воспользуйтесь командой /subscribe для привязки аккаунта.";
             return new SendMessage(chatId, text);
         }
 
         Object personObject = mapObject.get("person");
         var personData = tgConfig.getObjectToMap(personObject);
-        TgUser tgUser = new TgUser(0, message.getFrom().getUserName(), email,
-                message.getChatId(), false, (int) personData.get("id"));
+        TgUser tgUser = new TgUser(0, username, email, message.getChatId(), (int) personData.get("id"));
         tgUserService.save(tgUser);
         text = "Вы зарегистрированы: " + sl
                + "Логин: " + email + sl

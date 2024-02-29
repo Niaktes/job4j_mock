@@ -12,7 +12,7 @@ class TgUserTest {
 
     @BeforeEach
     public void setUp() {
-        tgUser = new TgUser(0, "username", "email", 1L, false, 1);
+        tgUser = new TgUser(0, "username", "email", 1L, 1);
     }
 
     @Test
@@ -28,11 +28,6 @@ class TgUserTest {
     @Test
     void testGetChatId() {
         assertThat(tgUser.getChatId(), is(1L));
-    }
-
-    @Test
-    void testIsSubscribed() {
-        assertThat(tgUser.isSubscribed(), is(false));
     }
 
     @Test

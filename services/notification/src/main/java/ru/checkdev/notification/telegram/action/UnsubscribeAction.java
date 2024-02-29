@@ -13,7 +13,7 @@ public class UnsubscribeAction implements Action {
 
     /**
      * Метод формирует пользователю ответное сообщение
-     * и меняет статус пользователя на "не подписан".
+     * и удаляет привязку аккаунта телеграм к аккаунту.
      * @param message Сообщение от пользователя.
      * @return BotApiMethod<Message> Ответное сообщение бота.
      */
@@ -28,8 +28,8 @@ public class UnsubscribeAction implements Action {
                     + "Для регистрации, пожалуйста, используйте команду /new.";
             return new SendMessage(String.valueOf(chatId), text);
         }
-        tgUserService.updateSubscribedByChatId(chatId, false);
-        text = "Подписка отменена.";
+        tgUserService.deleteByChatId(chatId);
+        text = "Аккаунт телеграм успешно отвязан.";
         return new SendMessage(String.valueOf(chatId), text);
     }
 

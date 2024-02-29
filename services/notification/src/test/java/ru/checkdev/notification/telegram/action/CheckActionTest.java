@@ -43,13 +43,14 @@ class CheckActionTest {
 
     @Test
     void whenUserExistsThenGetMessageWithUsernameAndEmail() {
-        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), false, 1);
+        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), 1);
         when(tgUserServiceMock.findByChatId(message.getChatId())).thenReturn(Optional.of(user));
 
         SendMessage actualAnswer = (SendMessage) action.handle(message);
 
         assertThat(actualAnswer.getChatId()).isEqualTo(String.valueOf(message.getChatId()));
         assertThat(actualAnswer.getText())
+                .contains("К Вашему аккаунту привязан пользователь со следующими данными: ")
                 .contains("имя пользователя: " + user.getUsername())
                 .contains("почта: " + user.getEmail());
     }

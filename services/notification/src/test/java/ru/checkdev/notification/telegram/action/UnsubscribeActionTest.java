@@ -8,10 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.checkdev.notification.domain.TgUser;
 import ru.checkdev.notification.telegram.service.TgUserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,13 +42,13 @@ class UnsubscribeActionTest {
 
     @Test
     void whenUserExistsThenGetUnsubscribeMessage() {
-        TgUser user = new TgUser(1, "username", "e@mail", message.getChatId(), false, 1);
         when(tgUserServiceMock.checkUserExists(message.getChatId())).thenReturn(true);
+        when(tgUserServiceMock.deleteByChatId(any(Long.class))).thenReturn(true);
 
         SendMessage actualAnswer = (SendMessage) action.handle(message);
 
         assertThat(actualAnswer.getChatId()).isEqualTo(String.valueOf(message.getChatId()));
-        assertThat(actualAnswer.getText()).contains("Подписка отменена.");
+        assertThat(actualAnswer.getText()).contains("Аккаунт телеграм успешно отвязан.");
     }
 
 }

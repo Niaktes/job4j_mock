@@ -18,7 +18,6 @@ public class TgUser {
     private String email;
     @Column(name = "chat_id")
     private long chatId;
-    private boolean subscribed;
     @Column(name = "user_id")
     private int userId;
 

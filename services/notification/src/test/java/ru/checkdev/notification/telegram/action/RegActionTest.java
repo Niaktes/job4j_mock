@@ -1,6 +1,5 @@
 package ru.checkdev.notification.telegram.action;
 
-import java.util.Optional;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -19,7 +18,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import reactor.core.publisher.Mono;
 import ru.checkdev.notification.domain.PersonDTO;
-import ru.checkdev.notification.domain.TgUser;
 import ru.checkdev.notification.telegram.service.TgAuthCallWebClient;
 import ru.checkdev.notification.telegram.service.TgUserService;
 
@@ -47,6 +45,7 @@ class RegActionTest {
         action = new RegAction(tgUserServiceMock, tgAuthCallWebClientMock, siteUrlMock);
         message = new Message();
         message.setChat(new Chat(1L, "private"));
+        message.setFrom(new User(1L, "username", false));
 
         logger = (Logger) LoggerFactory.getLogger(RegAction.class);
         listAppender = new ListAppender<>();
@@ -108,7 +107,7 @@ class RegActionTest {
                 .anyMatch(event -> event.getLevel().equals(Level.ERROR))
         );
         assertThat(actualAnswer.getChatId()).isEqualTo(String.valueOf(message.getChatId()));
-        assertThat(actualAnswer.getText()).contains("Сервис не доступен попробуйте позже");
+        assertThat(actualAnswer.getText()).contains("Сервис авторизации не доступен попробуйте позже");
     }
 
     @Test
@@ -125,12 +124,13 @@ class RegActionTest {
 
         assertThat(actualAnswer.getChatId()).isEqualTo(String.valueOf(message.getChatId()));
         assertThat(actualAnswer.getText())
-                .contains("Ошибка регистрации: Error Info");
+                .contains("Error Info")
+                .contains("Если Вы владелец существующего аккаунта с указанной почтой,")
+                .contains("воспользуйтесь командой /subscribe для привязки аккаунта.");
     }
 
     @Test
     void whenCallbackAndServerResponseHaveNoErrorThenGetSubscriptionCompletedMessage() {
-        message.setFrom(new User(1L, "user", false));
         message.setText("email@mail.ru");
         when(tgAuthCallWebClientMock.doPost(any(String.class), any(PersonDTO.class)))
                 .thenReturn(Mono.just(new Object() {

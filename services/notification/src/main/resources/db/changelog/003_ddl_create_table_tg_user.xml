@@ -16,7 +16,6 @@
         <constraints unique="true"/>
       </column>
       <column name="chat_id" type="bigint"/>
-      <column name="subscribed" type="boolean" defaultValueBoolean="false"/>
       <column name="user_id" type="int"/>
     </createTable>
   </changeSet>

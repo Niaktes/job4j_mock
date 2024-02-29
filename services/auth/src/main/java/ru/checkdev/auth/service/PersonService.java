@@ -1,7 +1,6 @@
 package ru.checkdev.auth.service;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.RandomStringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -133,7 +132,7 @@ public class PersonService {
         if (find == null) {
             result = Optional.empty();
         } else {
-            String password = RandomStringUtils.randomAlphabetic(8);
+            String password = profile.getPassword();
             find.setPassword(this.encoding.encode(password));
             this.persons.save(find);
             Map<String, Object> keys = new HashMap<>();
@@ -199,11 +198,6 @@ public class PersonService {
 
     public Long showed() {
         return this.persons.showed();
-    }
-
-    public boolean checkProfilePassword(String email, String password) {
-        Profile profile = persons.findPerson(email);
-        return encoding.matches(password, profile.getPassword());
     }
 
     public Photo compress(MultipartFile multipartFile) {
