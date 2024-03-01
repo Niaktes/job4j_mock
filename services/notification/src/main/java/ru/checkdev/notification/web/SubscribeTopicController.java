@@ -1,12 +1,14 @@
 package ru.checkdev.notification.web;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.checkdev.notification.domain.SubscribeTopic;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.checkdev.notification.service.SubscribeTopicService;
-import java.util.List;
 
 @RestController
 @RequestMapping("/subscribeTopic")
@@ -20,19 +22,4 @@ public class SubscribeTopicController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<SubscribeTopic> toAddSubscribeTopic(
-            @RequestBody SubscribeTopic subscribetopic
-    ) {
-        var created = service.save(subscribetopic);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/delete")
-    public ResponseEntity<SubscribeTopic> toDeleteSubscribeTopic(
-            @RequestBody SubscribeTopic subscribeTopic
-    ) {
-        var deleted = service.delete(subscribeTopic);
-        return new ResponseEntity<>(deleted, HttpStatus.OK);
-    }
 }
