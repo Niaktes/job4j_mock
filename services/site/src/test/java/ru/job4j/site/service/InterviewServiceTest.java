@@ -19,7 +19,8 @@ import static org.mockito.Mockito.when;
  */
 class InterviewServiceTest {
     private ProfilesService profilesService = mock(ProfilesService.class);
-    private InterviewService interviewService = new InterviewService(profilesService);
+    private InterviewService interviewService = new InterviewService("http://localhost:9912",
+            profilesService);
 
     @Test
     void injectedNotNull() {

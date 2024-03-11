@@ -3,7 +3,7 @@ package ru.job4j.site.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.job4j.site.dto.SubscribeCategory;
@@ -14,10 +14,16 @@ import ru.job4j.site.dto.UserTopicDTO;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class NotificationService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final String notificationServiceUrl;
+
+    public NotificationService(KafkaTemplate<String, Object> kafkaTemplate,
+                               @Value("${service.notification}") String notificationServiceUrl) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.notificationServiceUrl = notificationServiceUrl;
+    }
 
     public void addSubscribeCategory(int userId, int categoryId) {
         SubscribeCategory subscribeCategory = new SubscribeCategory(userId, categoryId);
@@ -30,7 +36,7 @@ public class NotificationService {
     }
 
     public UserDTO findCategoriesByUserId(int id) throws JsonProcessingException {
-        var text = new RestAuthCall("http://localhost:9920/subscribeCategory/" + id).get();
+        var text = new RestAuthCall(notificationServiceUrl + "/subscribeCategory/" + id).get();
         var mapper = new ObjectMapper();
         List<Integer> list = mapper.readValue(text, new TypeReference<>() {
         });
@@ -48,7 +54,7 @@ public class NotificationService {
     }
 
     public UserTopicDTO findTopicByUserId(int id) throws JsonProcessingException {
-        var text = new RestAuthCall("http://localhost:9920/subscribeTopic/" + id).get();
+        var text = new RestAuthCall(notificationServiceUrl + "/subscribeTopic/" + id).get();
         var mapper = new ObjectMapper();
         List<Integer> list = mapper.readValue(text, new TypeReference<>() {
         });
